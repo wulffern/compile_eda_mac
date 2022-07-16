@@ -22,7 +22,8 @@ magic:
 
 cmagic: magic
 	perl -pe "s/-g/-g -Wno-error=implicit-function-declaration/ig" -i magic/configure
-	cd magic && ./configure --with-tcl=/usr/local/opt2/tcl-tk/lib --with-tk=/usr/local/opt2/tcl-tk/lib --x-includes=/opt/X11/include --x-libraries=/opt/X11/lib && make && sudo make install
+	cd magic && ./configure --prefix=/usr/local/opt2/tcl-tk --with-tcl=/usr/local/opt2/tcl-tk/lib --with-tk=/usr/local/opt2/tcl-tk/lib --x-includes=/opt/X11/include --x-libraries=/opt/X11/lib && make && sudo make install
+
 
 xschem:
 	git clone https://github.com/StefanSchippers/xschem.git
@@ -47,7 +48,7 @@ netgen:
 cnetgen: netgen
 	perl -pe "s/-g/-g -Wno-error=implicit-function-declaration/ig" -i netgen/configure
 	cd netgen && ./configure --prefix /usr/local/eda/ --with-tcl=/usr/local/opt2/tcl-tk/lib --with-tk=/usr/local/opt2/tcl-tk/lib --x-includes=/opt/X11/include --x-libraries=/opt/X11/lib && make && sudo make install
-
+	sudo install_name_tool -change /usr/local/opt2/tcl-tk/lib:/opt/X11/lib/libtk8.6.dylib /usr/local/opt2/tcl-tk/lib/libtk8.6.dylib /usr/local/eda/lib/netgen/tcl/netgenexec
 ngspice:
 	git clone https://git.code.sf.net/p/ngspice/ngspice ngspice
 	cd ngspice; git checkout ngspice-36
