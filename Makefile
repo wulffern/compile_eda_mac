@@ -22,7 +22,8 @@ magic:
 
 cmagic: magic
 	perl -pe "s/-g/-g -Wno-error=implicit-function-declaration/ig" -i magic/configure
-	cd magic && ./configure --prefix=/usr/local/opt2/tcl-tk --with-tcl=/usr/local/opt2/tcl-tk/lib --with-tk=/usr/local/opt2/tcl-tk/lib --x-includes=/opt/X11/include --x-libraries=/opt/X11/lib && make && sudo make install
+	cd magic && ./configure --prefix=/usr/local/opt2/tcl-tk --with-tcl=/usr/local/opt2/tcl-tk/lib --with-tk=/usr/local/opt2/tcl-tk/lib --x-includes=/opt/X11/include --x-libraries=/opt/X11/lib && make
+	#cd magic && sudo make install
 
 
 xschem:
@@ -51,10 +52,26 @@ cnetgen: netgen
 	sudo install_name_tool -change /usr/local/opt2/tcl-tk/lib:/opt/X11/lib/libtk8.6.dylib /usr/local/opt2/tcl-tk/lib/libtk8.6.dylib /usr/local/eda/lib/netgen/tcl/netgenexec
 ngspice:
 	git clone https://git.code.sf.net/p/ngspice/ngspice ngspice
-	cd ngspice; git checkout ngspice-36
+	#cd ngspice; git checkout ngspice-36
 
 # Pre-requisites
 # brew install bison
 # # fix bison paths
-cngspice:
-	cd ngspice && ./autogen.sh && ./configure --prefix /usr/local/eda/ --with-x --x-includes=/opt/X11/include --x-libraries=/opt/X11/lib --enable-xspice --enable-cider --with-readline=/usr/local/opt/readline --disable-debug CFLAGS="-m64 -O2 -I/opt/X11/include/freetype2 -I/usr/local/opt/readline/include" LDFLAGS="-m64 -L/usr/local/opt/readline/lib" && make && make install
+# Need to use gcc-11 or gcc-12 from homebrew to get openmp to work
+cngspice: ngspice
+#--enable-xspice --enable-cider --with-readline=yes --enable-openmp
+	cd ngspice && ./autogen.sh && ./configure \
+	--prefix /usr/local/eda/ \
+	--with-x \
+	--x-includes=/opt/X11/include \
+	--x-libraries=/opt/X11/lib \
+	--enable-xspice  \
+	--enable-openmp \
+	--enable-pss \
+	--enable-cider \
+	CC=gcc-12 CXX=g++-12 \
+	--with-readline=/usr/local/opt/readline \
+	--disable-debug CFLAGS=" -O2 -I/opt/X11/include/freetype2 -I/usr/local/include -I/usr/local/opt/readline/include " \
+	LDFLAGS=" -L/usr/local/opt/readline/lib -L/usr/local/lib -lomp" \
+	&& make clean && make -j8
+	#cd ngspice &&  sudo make install
