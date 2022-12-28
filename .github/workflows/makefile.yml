@@ -8,8 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-
+  tcltk:
     runs-on: macos-latest
 
     steps:
@@ -32,14 +31,39 @@ jobs:
       if: steps.${{ runner.os }}-tcltk.outputs.cache-hit != 'true'
       run: make tcl_compile tcl_install tk_compile tk_install
 
+  prepare:
+    runs-on: macos-latest
+    steps:
+      - name: homebrew
+        step: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      - name: Install XQuartz on macOS
+        if: runner.os == 'macOS'
+        run: brew install xquartz --cask
+
+  netgen:
+    runs-on: macos-latest
+    needs: tcltk
+    steps:
     - name: Netgen
       run: make netgen_compile netgen_install
 
+  ngspice:
+    runs-on: macos-latest
+    needs: tcltk
+    steps:
     - name: Ngspice
       run: make ngspice_compile ngspice_install
 
+  magic:
+    runs-on: macos-latest
+    needs: tcltk
+    steps:
     - name: Magic
       run: make magic_compile magic_install
 
+  xschem:
+    runs-on: macos-latest
+    needs: tcltk
+    steps:
     - name: Xschem
       run: make xschem_compile xschem_install
