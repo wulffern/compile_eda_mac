@@ -28,13 +28,10 @@
 TK_PREFIX=/usr/local/opt2/tcl-tk
 EDA_PREFIX=/usr/local/eda
 
-all: tt_compile tt_install eda_compile eda_install
+all: tt eda_compile eda_install
 
-tt_compile: tcl_compile \
-	tk_compile \
-
-tt_install: tcl_install \
-	tk_install
+tt: tcl_compile tcl_install \
+	tk_compile tk_install 
 
 eda_compile: magic_compile \
 	xschem_compile \
