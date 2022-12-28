@@ -53,10 +53,10 @@ jobs:
 
     - name: Install XQuartz on macOS
       if: runner.os == 'macOS'
-      run: brew install xquartz --cask
-
-    - name: Magic
-      run: make magic_compile magic_install
+      run: |
+        brew install xquartz --cask
+        brew install libxpm
+        brew install bison
 
     - name: Xschem
       run: make xschem_compile xschem_install
@@ -66,6 +66,9 @@ jobs:
 
     - name: Netgen
       run: make netgen_compile netgen_install
+
+    - name: Magic
+      run: make magic_compile magic_install
 
 
     - name: Make tar
