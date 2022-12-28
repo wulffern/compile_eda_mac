@@ -1,6 +1,36 @@
+######################################################################
+##        Copyright (c) 2022 Carsten Wulff Software, Norway
+## ###################################################################
+## Created       : wulff at 2022-12-28
+## ###################################################################
+##  The MIT License (MIT)
+##
+##  Permission is hereby granted, free of charge, to any person obtaining a copy
+##  of this software and associated documentation files (the "Software"), to deal
+##  in the Software without restriction, including without limitation the rights
+##  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+##  copies of the Software, and to permit persons to whom the Software is
+##  furnished to do so, subject to the following conditions:
+##
+##  The above copyright notice and this permission notice shall be included in all
+##  copies or substantial portions of the Software.
+##
+##  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+##  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+##  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+##  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+##  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+##  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+##  SOFTWARE.
+##
+######################################################################
+
 
 tclver=tcl8.6.10
 tkver=tk8.6.10
+
+all:
+	§{MAKE} tk tcl cmagic cxschem cnetgen cngspice
 
 ${tclver}:
 	wget https://prdownloads.sourceforge.net/tcl/${tclver}-src.tar.gz
@@ -23,7 +53,7 @@ magic:
 cmagic: magic
 	perl -pe "s/-g/-g -Wno-error=implicit-function-declaration/ig" -i magic/configure
 	cd magic && ./configure --prefix=/usr/local/opt2/tcl-tk --with-tcl=/usr/local/opt2/tcl-tk/lib --with-tk=/usr/local/opt2/tcl-tk/lib --x-includes=/opt/X11/include --x-libraries=/opt/X11/lib && make
-	#cd magic && sudo make install
+	cd magic && sudo make install
 
 
 xschem:
@@ -37,11 +67,11 @@ cxschem:
 	cd xschem && sudo make install
 	sudo install_name_tool -change /usr/local/opt2/tcl-tk/lib:/opt/X11/lib/libtk8.6.dylib /usr/local/opt2/tcl-tk/lib/libtk8.6.dylib /usr/local/eda/bin/xschem
 
-XCircuit:
-	git clone git@github.com:RTimothyEdwards/XCircuit.git
-
-cxcircuit: XCircuit
-	cd XCircuit &&   ./configure   --with-tcl=/usr/local/opt2/tcl-tk/lib --with-tk=/usr/local/opt2/tcl-tk/lib --prefix /usr/local/opt2/   && make && sudo make install
+#XCircuit:
+#	git clone git@github.com:RTimothyEdwards/XCircuit.git
+#
+#cxcircuit: XCircuit
+#	cd XCircuit &&   ./configure   --with-tcl=/usr/local/opt2/tcl-tk/lib --with-tk=/usr/local/opt2/tcl-tk/lib --prefix /usr/local/opt2/   && make && sudo make install
 
 netgen:
 	git clone git@github.com:RTimothyEdwards/netgen.git
@@ -50,9 +80,9 @@ cnetgen: netgen
 	perl -pe "s/-g/-g -Wno-error=implicit-function-declaration/ig" -i netgen/configure
 	cd netgen && ./configure --prefix /usr/local/eda/ --with-tcl=/usr/local/opt2/tcl-tk/lib --with-tk=/usr/local/opt2/tcl-tk/lib --x-includes=/opt/X11/include --x-libraries=/opt/X11/lib && make && sudo make install
 	sudo install_name_tool -change /usr/local/opt2/tcl-tk/lib:/opt/X11/lib/libtk8.6.dylib /usr/local/opt2/tcl-tk/lib/libtk8.6.dylib /usr/local/eda/lib/netgen/tcl/netgenexec
+
 ngspice:
 	git clone https://git.code.sf.net/p/ngspice/ngspice ngspice
-	#cd ngspice; git checkout ngspice-36
 
 # Pre-requisites
 # brew install bison
@@ -60,6 +90,7 @@ ngspice:
 # Need to use gcc-11 or gcc-12 from homebrew to get openmp to work
 cngspice: ngspice
 #--enable-xspice --enable-cider --with-readline=yes --enable-openmp
+	cd ngspice && git pull
 	cd ngspice && ./autogen.sh && ./configure \
 	--prefix /usr/local/eda/ \
 	--with-x \
@@ -74,4 +105,10 @@ cngspice: ngspice
 	--disable-debug CFLAGS=" -O2 -I/opt/X11/include/freetype2 -I/usr/local/include -I/usr/local/opt/readline/include " \
 	LDFLAGS=" -L/usr/local/opt/readline/lib -L/usr/local/lib -lomp" \
 	&& make clean && make -j8
-	#cd ngspice &&  sudo make install
+	cd ngspice &&  sudo make install
+
+xyce:
+	git clone git@github.com:Xyce/Xyce.git
+	git clone --shallow-since 2022-09-15 --branch develop https://github.com/trilinos/Trilinos.git
+
+cxyce: xyce
