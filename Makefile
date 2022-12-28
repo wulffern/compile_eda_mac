@@ -170,7 +170,7 @@ ngspice_compile: ngspice
 	CC="gcc-12" CXX="g++-12" \
 	--with-readline=/usr/local/opt/readline \
 	--disable-debug CFLAGS="-m64 -O2 -I/opt/X11/include/freetype2 -I/usr/local/include -I/usr/local/opt/readline/include " \
-	LDFLAGS="-m64 -L/usr/local/opt/bison/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/ncurses/lib -L/usr/local/lib -lomp"
+	LDFLAGS="-m64 -L/usr/local/opt/bison/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/ncurses/lib -L/usr/local/lib -L/usr/local/opt/libomp/lib/ -fopenmp -lomp"
 	cd ngspice && cat config.log && make -j4
 
 ngspice_install:
