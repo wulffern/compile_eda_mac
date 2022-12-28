@@ -50,15 +50,11 @@ jobs:
 
     - name: homebrew
       run: |
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         brew install xquartz --cask
         brew install libxpm
         brew install bison
-        export PATH="/usr/local/opt/bison/bin:$PATH"
-        export LDFLAGS="-L/usr/local/opt/bison/lib"
         brew install readline
         brew install libomp
-        brew install gcc@12
         brew install automake
 
 
