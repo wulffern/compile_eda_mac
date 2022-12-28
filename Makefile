@@ -61,7 +61,7 @@ requirements:
 	brew install automake
 	brew install glib
 	brew install libxaw
-    brew install flex
+	brew install flex
 
 #--------------------------------------------------------------------
 # TCL/TK
@@ -168,7 +168,7 @@ ngspice:
 # # fix bison paths
 # Need to use gcc-11 or gcc-12 from homebrew to get openmp to work
 ngspice_compile: ngspice
-	- cd ngspice && ./autogen.sh && ./configure \
+	cd ngspice && ./autogen.sh && ./configure \
 	--prefix ${EDA_PREFIX}/ \
 	--with-x \
 	--x-includes=/opt/X11/include \
@@ -181,7 +181,7 @@ ngspice_compile: ngspice
 	--with-readline=/usr/local/opt/readline \
 	--disable-debug CFLAGS="-m64 -O2 -I/opt/X11/include/freetype2 -I/usr/local/include -I/usr/local/opt/readline/include " \
 	LDFLAGS="-m64 -L/usr/local/opt/bison/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/ncurses/lib -L/usr/local/lib -L/usr/local/opt/libomp/lib/ -fopenmp -lomp"
-	cd ngspice && cat config.log && make -j4
+	cd ngspice  && make -j4
 
 ngspice_install:
 	cd ngspice &&  sudo make install
