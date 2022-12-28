@@ -50,12 +50,17 @@ jobs:
 
     - name: homebrew
       run: |
+        brew list
         brew install xquartz --cask
         brew install libxpm
         brew install bison
         brew install readline
         brew install libomp
         brew install automake
+        brew install glib
+        brew install libxaw
+        brew install libtool
+        brew install libx11
 
     - name: Ngspice
       run: make ngspice_compile ngspice_install
