@@ -7,7 +7,7 @@ I've collected how I compile the tools in the Makefile
 
 To compile and install all
 
-   sudo make all 
+   sudo make 
 
 
 Read the Makefile for the rest 
