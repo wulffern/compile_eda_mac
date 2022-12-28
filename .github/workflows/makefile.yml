@@ -40,7 +40,7 @@ jobs:
       id: cache-assets
       uses: actions/cache@v3
       with:
-        key: ${{ runner.os }}-tcltk
+        key: ${{ runner.os }}-assets
         path: |
           docs/assets
 
@@ -55,23 +55,22 @@ jobs:
       if: runner.os == 'macOS'
       run: brew install xquartz --cask
 
-    - name: Netgen
-      run: make netgen_compile netgen_install
-
-    - name: Ngspice
-      run: make ngspice_compile ngspice_install
-
     - name: Magic
       run: make magic_compile magic_install
 
     - name: Xschem
       run: make xschem_compile xschem_install
 
+    - name: Ngspice
+      run: make ngspice_compile ngspice_install
+
+    - name: Netgen
+      run: make netgen_compile netgen_install
+
+
     - name: Make tar
       run: |
         tar cfz docs/assets/eda-macos-12.tar.gz /usr/local/eda
-
-
 
     - name: Build with Jekyll
       uses: actions/jekyll-build-pages@v1
