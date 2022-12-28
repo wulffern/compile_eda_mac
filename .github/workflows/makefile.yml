@@ -24,7 +24,7 @@ jobs:
           /usr/local/opt2/tcl-tk
 
     - name: TCL/TK
-      if: steps.cache-tcltk.outputs.cache-hit != 'true'
+      if: steps.${{ runner.os }}-tcltk.outputs.cache-hit != 'true'
       run: make tcl_compile tcl_install tk_compile tk_install
 
     - name: Netgen
