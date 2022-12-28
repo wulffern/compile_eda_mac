@@ -52,6 +52,17 @@ clean:
 	rm -rf xschem*
 	rm -rf netgen
 
+requirements:
+	brew install xquartz --cask
+	brew install libxpm
+	brew install bison
+	brew install readline
+	brew install libomp
+	brew install automake
+	brew install glib
+	brew install libxaw
+    brew install flex
+
 #--------------------------------------------------------------------
 # TCL/TK
 #--------------------------------------------------------------------
@@ -157,7 +168,6 @@ ngspice:
 # # fix bison paths
 # Need to use gcc-11 or gcc-12 from homebrew to get openmp to work
 ngspice_compile: ngspice
-	export PATH="/usr/local/opt/bison/bin:$PATH"
 	- cd ngspice && ./autogen.sh && ./configure \
 	--prefix ${EDA_PREFIX}/ \
 	--with-x \
