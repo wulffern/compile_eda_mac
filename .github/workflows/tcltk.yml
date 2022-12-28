@@ -14,11 +14,10 @@ jobs:
     - uses: actions/checkout@v3
     - name: Cache tcl/tk
       id: cache-tcltk
-
       uses: actions/cache@v3
       with:
         key: ${{ runner.os }}-tcltk
         path: |
-          /usr/local/opt2/tcl-tk
+          /usr/local/eda/tcl-tk
     - name: TCL/TK
       run: make tcl_compile tcl_install tk_compile tk_install

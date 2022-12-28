@@ -26,7 +26,7 @@ jobs:
       with:
         key: ${{ runner.os }}-tcltk
         path: |
-          /usr/local/opt2/tcl-tk
+          /usr/local/eda/tcl-tk
 
     - name: TCL/TK
       if: steps.${{ runner.os }}-tcltk.outputs.cache-hit != 'true'

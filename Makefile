@@ -25,7 +25,7 @@
 ##
 ######################################################################
 
-TK_PREFIX=/usr/local/eda
+TK_PREFIX=/usr/local/eda/tcl-tk
 EDA_PREFIX=/usr/local/eda
 
 all: tt eda_compile eda_install
