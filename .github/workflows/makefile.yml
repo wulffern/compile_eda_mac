@@ -16,7 +16,9 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: chown /usr/local/eda
-      run: sudo chown $(whoami) /usr/local/eda
+      run: |
+        sudo mkdir /usr/local/eda
+        sudo chown $(whoami) /usr/local/eda
 
     - name: Cache tcl/tk
       id: cache-tcltk
