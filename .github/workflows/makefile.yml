@@ -57,9 +57,13 @@ jobs:
         brew install xquartz --cask
         brew install libxpm
         brew install bison
-
-    - name: Xschem
-      run: make xschem_compile xschem_install
+        brew install libomp
+        brew install gcc@12
+        brew install automake
+        alias gcc='gcc-12'
+        alias g++='g++-12'
+        alias c++='c++-12'
+        alias cpp='cpp-12'
 
     - name: Ngspice
       run: make ngspice_compile ngspice_install
@@ -70,6 +74,8 @@ jobs:
     - name: Magic
       run: make magic_compile magic_install
 
+    - name: Xschem
+      run: make xschem_compile xschem_install
 
     - name: Make tar
       run: |
