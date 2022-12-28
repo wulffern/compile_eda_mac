@@ -157,8 +157,13 @@ ngspice:
 # # fix bison paths
 # Need to use gcc-11 or gcc-12 from homebrew to get openmp to work
 ngspice_compile: ngspice
+	ls /usr/local/include
+	ls /opt/X11/include/freetype2
+	ls /usr/local/opt/readline/include
+	ls /usr/local/opt/bison/lib
+	ls /usr/local/opt/ncurses/lib
+
 	export PATH="/usr/local/opt/bison/bin:$PATH"
-	export LDFLAGS=""
 	cd ngspice && ./autogen.sh && ./configure \
 	--prefix ${EDA_PREFIX}/ \
 	--with-x \

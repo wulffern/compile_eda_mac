@@ -61,7 +61,7 @@ jobs:
         brew install libxaw
         brew install libtool
         brew install libx11
-        brew install coreutils
+        #brew install coreutils
         brew install flex
         brew install libopenmpt
 
