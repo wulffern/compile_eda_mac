@@ -58,11 +58,11 @@ jobs:
         brew install automake
         brew install glib
         brew install libxaw
-        brew install libtool
-        brew install libx11
+        #brew install libtool
+        #brew install libx11
         #brew install coreutils
         brew install flex
-        xcode-select --install
+        #xcode-select --install
 
     - name: Ngspice
       run: make ngspice_compile ngspice_install
