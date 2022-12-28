@@ -50,7 +50,6 @@ jobs:
 
     - name: homebrew
       run: |
-        brew list
         brew install xquartz --cask
         brew install libxpm
         brew install bison
@@ -63,7 +62,7 @@ jobs:
         brew install libx11
         #brew install coreutils
         brew install flex
-        brew install libopenmpt
+        xcode-select --install
 
     - name: Ngspice
       run: make ngspice_compile ngspice_install
