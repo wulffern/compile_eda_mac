@@ -168,7 +168,7 @@ ngspice_compile: ngspice
 	--enable-openmp \
 	--enable-pss \
 	--enable-cider \
-	 CC="gcc-12" CXX="g++-12" \
+	CC="gcc-11" CXX="g++-11" \
 	--with-readline=/usr/local/opt/readline \
 	--disable-debug CFLAGS="-m64 -O2 -I/opt/X11/include/freetype2 -I/usr/local/include -I/usr/local/opt/readline/include " \
 	LDFLAGS="-m64 -L/usr/local/opt/bison/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/ncurses/lib -L/usr/local/lib -lomp" \
