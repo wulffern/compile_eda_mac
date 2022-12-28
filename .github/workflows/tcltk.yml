@@ -1,10 +1,11 @@
-name: Makefile CI
+name: TCL/TK CI
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  #push:
+  #  branches: [ "main" ]
+  #pull_request:
+  #  branches: [ "main" ]
+  workflow_call
 
 jobs:
   build:
@@ -14,11 +15,10 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Cache tcl/tk
+      uses: actions/cache@v3
+      with:
+        path: |
+          /usr/local/opt2/tcl-tk
     - name: TCL/TK
       run: make tcl_compile tcl_install tk_compile tk_install
-    - name: package
-      run: tar cfz tcl-tk.tar.gz /usr/local/opt2/tcl-tk
-    - uses: actions/upload-artifact@v3
-      with:
-        name: tcltk
-        path: tcl-tk.tar.gz

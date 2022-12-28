@@ -130,7 +130,7 @@ xschem_install:
 #--------------------------------------------------------------------
 
 netgen:
-	git clone git@github.com:RTimothyEdwards/netgen.git
+	git clone https://github.com/RTimothyEdwards/netgen.git
 
 netgen_compile: netgen
 	perl -pe "s/-g/-g -Wno-error=implicit-function-declaration/ig" -i netgen/configure
