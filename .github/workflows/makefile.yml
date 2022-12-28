@@ -49,21 +49,15 @@ jobs:
       run: make tcl_compile tcl_install tk_compile tk_install
 
     - name: homebrew
-      run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-    - name: Install XQuartz on macOS
-      if: runner.os == 'macOS'
       run: |
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         brew install xquartz --cask
         brew install libxpm
         brew install bison
         brew install libomp
         brew install gcc@12
         brew install automake
-        alias gcc='gcc-12'
-        alias g++='g++-12'
-        alias c++='c++-12'
-        alias cpp='cpp-12'
+
 
     - name: Ngspice
       run: make ngspice_compile ngspice_install
