@@ -25,61 +25,130 @@
 ##
 ######################################################################
 
+TK_PREFIX=/usr/local/opt2/tcl-tk
+EDA_PREFIX=/usr/local/eda
 
-tclver=tcl8.6.10
-tkver=tk8.6.10
+all: tt_compile tt_install eda_compile eda_install
 
-all:
-	§{MAKE} tk tcl cmagic cxschem cnetgen cngspice
+tt_compile: tcl_compile \
+	tk_compile \
+
+tt_install: tcl_install \
+	tk_install
+
+eda_compile: magic_compile \
+	xschem_compile \
+	netgen_compile \
+	ngspice_compile
+
+eda_install:
+	magic_install \
+	xschem_install \
+	netgen_install \
+	ngspice_install
+
+clean:
+	rm -rf ${tclver}*
+	rm -rf ${tkver}*
+	rm -rf ngspice
+	rm -rf magic
+	rm -rf xschem*
+	rm -rf netgen
+
+#--------------------------------------------------------------------
+# TCL/TK
+#--------------------------------------------------------------------
+ttver=8.6
+tclver=tcl${ttver}.10
+tkver=tk${ttver}.10
+
 
 ${tclver}:
 	wget https://prdownloads.sourceforge.net/tcl/${tclver}-src.tar.gz
 	tar zxvf ${tclver}-src.tar.gz
 
+
+tcl_compile: ${tclver}
+	cd ${tclver}/unix && \
+	./configure --prefix=${TK_PREFIX} && \
+	make -j4
+
+tcl_install:
+	cd ${tclver}/unix; sudo make install
+
 ${tkver}:
 	wget https://prdownloads.sourceforge.net/tcl/${tkver}-src.tar.gz
 	tar zxvf ${tkver}-src.tar.gz
 
-tcl: ${tclver}
-	cd ${tclver}/unix &&./configure --prefix=/usr/local/opt2/tcl-tk && make && sudo make install
 
-tk: ${tkver}
-	cd ${tkver}/unix && ./configure --prefix=/usr/local/opt2/tcl-tk --with-tcl=/usr/local/opt2/tcl-tk/lib --with-x --x-includes=/opt/X11/include --x-libraries=/opt/X11/lib   && make && sudo make install
-	cd /usr/local/opt2/tcl-tk/bin/ && sudo install_name_tool -change /usr/local/opt2/tcl-tk/lib:/opt/X11/lib/libtk8.6.dylib /usr/local/opt2/tcl-tk/lib/libtk8.6.dylib wish8.6
+tk_compile: ${tkver}
+	cd ${tkver}/unix && \
+	./configure --prefix=${TK_PREFIX} \
+	--with-tcl=${TK_PREFIX}/lib \
+	--with-x --x-includes=/opt/X11/include --x-libraries=/opt/X11/lib   && \
+	make -j4
+
+tk_install:
+	cd ${tkver}/unix; sudo make install
+	cd ${TK_PREFIX}/bin/ && \
+	sudo install_name_tool -change ${TK_PREFIX}/lib:/opt/X11/lib/libtk${ttver}.dylib \
+	${TK_PREFIX}/lib/libtk${ttver}.dylib wish${ttver}
+
+#--------------------------------------------------------------------
+# MAGIC
+#--------------------------------------------------------------------
 
 magic:
 	git clone https://github.com/RTimothyEdwards/magic
 
-cmagic: magic
+magic_compile: magic
 	perl -pe "s/-g/-g -Wno-error=implicit-function-declaration/ig" -i magic/configure
-	cd magic && ./configure --prefix=/usr/local/opt2/tcl-tk --with-tcl=/usr/local/opt2/tcl-tk/lib --with-tk=/usr/local/opt2/tcl-tk/lib --x-includes=/opt/X11/include --x-libraries=/opt/X11/lib && make
+	cd magic && ./configure --prefix=${TK_PREFIX} --with-tcl=${TK_PREFIX}/lib \
+	--with-tk=${TK_PREFIX}/lib --x-includes=/opt/X11/include --x-libraries=/opt/X11/lib && \
+	make -j4
+
+magic_install:
 	cd magic && sudo make install
 
+#--------------------------------------------------------------------
+# XSchem
+#--------------------------------------------------------------------
 
 xschem:
 	git clone https://github.com/StefanSchippers/xschem.git
 
-cxschem:
-	cd xschem && ./configure --prefix=/usr/local/eda
-	perl -ibak -pe "s/CFLAGS/#CFLAGS/ig;s/LDFLAGS/#LDFLAGS/ig" xschem/Makefile.conf
-	echo "CFLAGS=-I/opt/X11/include -I/opt/X11/include/cairo -I/usr/local/opt2/tcl-tk/include -O2\n LDFLAGS= -L/usr/local/opt2/tcl-tk/lib -L/opt/X11/lib -lm -lcairo  -lX11 -lXrender -lxcb -lxcb-render -lX11-xcb -lXpm -ltcl8.6 -ltk8.6" >> xschem/Makefile.conf
-	cd xschem && make
-	cd xschem && sudo make install
-	sudo install_name_tool -change /usr/local/opt2/tcl-tk/lib:/opt/X11/lib/libtk8.6.dylib /usr/local/opt2/tcl-tk/lib/libtk8.6.dylib /usr/local/eda/bin/xschem
 
-#XCircuit:
-#	git clone git@github.com:RTimothyEdwards/XCircuit.git
-#
-#cxcircuit: XCircuit
-#	cd XCircuit &&   ./configure   --with-tcl=/usr/local/opt2/tcl-tk/lib --with-tk=/usr/local/opt2/tcl-tk/lib --prefix /usr/local/opt2/   && make && sudo make install
+xschem_compile: xschem
+	cd xschem && ./configure --prefix=${EDA_PREFIX}
+	perl -ibak -pe "s/CFLAGS/#CFLAGS/ig;s/LDFLAGS/#LDFLAGS/ig" xschem/Makefile.conf
+	echo "CFLAGS=-I/opt/X11/include -I/opt/X11/include/cairo -I${TK_PREFIX}/include -O2\n LDFLAGS= -L${TK_PREFIX}/lib -L/opt/X11/lib -lm -lcairo  -lX11 -lXrender -lxcb -lxcb-render -lX11-xcb -lXpm -ltcl8.6 -ltk8.6" >> xschem/Makefile.conf
+	cd xschem && make clean && make -j4
+
+xschem_install:
+	cd xschem && sudo make install
+	sudo install_name_tool -change ${TK_PREFIX}/lib:/opt/X11/lib/libtk${ttver}.dylib ${TK_PREFIX}/lib/libtk${ttver}.dylib ${EDA_PREFIX}/bin/xschem
+
+#--------------------------------------------------------------------
+# Netgen
+#--------------------------------------------------------------------
 
 netgen:
 	git clone git@github.com:RTimothyEdwards/netgen.git
 
-cnetgen: netgen
+netgen_compile: netgen
 	perl -pe "s/-g/-g -Wno-error=implicit-function-declaration/ig" -i netgen/configure
-	cd netgen && ./configure --prefix /usr/local/eda/ --with-tcl=/usr/local/opt2/tcl-tk/lib --with-tk=/usr/local/opt2/tcl-tk/lib --x-includes=/opt/X11/include --x-libraries=/opt/X11/lib && make && sudo make install
-	sudo install_name_tool -change /usr/local/opt2/tcl-tk/lib:/opt/X11/lib/libtk8.6.dylib /usr/local/opt2/tcl-tk/lib/libtk8.6.dylib /usr/local/eda/lib/netgen/tcl/netgenexec
+	cd netgen && ./configure --prefix ${EDA_PREFIX}/ --with-tcl=${TK_PREFIX}/lib \
+	--with-tk=${TK_PREFIX}/lib --x-includes=/opt/X11/include --x-libraries=/opt/X11/lib && \
+	make -j4
+
+netgen_install:
+	sudo make install
+	sudo install_name_tool -change ${TK_PREFIX}/lib:/opt/X11/lib/libtk${ttver}.dylib \
+	${TK_PREFIX}/lib/libtk${ttver}.dylib ${EDA_PREFIX}/lib/netgen/tcl/netgenexec
+
+#--------------------------------------------------------------------
+# ngspice
+#--------------------------------------------------------------------
 
 ngspice:
 	git clone https://git.code.sf.net/p/ngspice/ngspice ngspice
@@ -88,11 +157,9 @@ ngspice:
 # brew install bison
 # # fix bison paths
 # Need to use gcc-11 or gcc-12 from homebrew to get openmp to work
-cngspice: ngspice
-#--enable-xspice --enable-cider --with-readline=yes --enable-openmp
-	cd ngspice && git pull
+ngspice_compile: ngspice
 	cd ngspice && ./autogen.sh && ./configure \
-	--prefix /usr/local/eda/ \
+	--prefix ${EDA_PREFIX}/ \
 	--with-x \
 	--x-includes=/opt/X11/include \
 	--x-libraries=/opt/X11/lib \
@@ -104,11 +171,8 @@ cngspice: ngspice
 	--with-readline=/usr/local/opt/readline \
 	--disable-debug CFLAGS=" -O2 -I/opt/X11/include/freetype2 -I/usr/local/include -I/usr/local/opt/readline/include " \
 	LDFLAGS=" -L/usr/local/opt/readline/lib -L/usr/local/lib -lomp" \
-	&& make clean && make -j8
+	&&  make -j4
+
+ngspice_install:
 	cd ngspice &&  sudo make install
 
-xyce:
-	git clone git@github.com:Xyce/Xyce.git
-	git clone --shallow-since 2022-09-15 --branch develop https://github.com/trilinos/Trilinos.git
-
-cxyce: xyce
