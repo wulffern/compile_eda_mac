@@ -36,6 +36,14 @@ jobs:
         path: |
           /usr/local/eda/tcl-tk
 
+    - name: Cache assets
+      id: cache-assets
+      uses: actions/cache@v3
+      with:
+        key: ${{ runner.os }}-tcltk
+        path: |
+          docs/assets
+
     - name: TCL/TK
       if: steps.cache-tcltk.outputs.cache-hit != 'true'
       run: make tcl_compile tcl_install tk_compile tk_install
@@ -62,6 +70,8 @@ jobs:
     - name: Make tar
       run: |
         tar cfz docs/assets/eda-macos-12.tar.gz /usr/local/eda
+
+
 
     - name: Build with Jekyll
       uses: actions/jekyll-build-pages@v1
