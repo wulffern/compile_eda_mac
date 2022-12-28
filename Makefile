@@ -139,7 +139,7 @@ netgen_compile: netgen
 	make -j4
 
 netgen_install:
-	sudo make install
+	cd xschem && sudo make install && \
 	sudo install_name_tool -change ${TK_PREFIX}/lib:/opt/X11/lib/libtk${ttver}.dylib \
 	${TK_PREFIX}/lib/libtk${ttver}.dylib ${EDA_PREFIX}/lib/netgen/tcl/netgenexec
 
