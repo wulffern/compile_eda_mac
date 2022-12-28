@@ -61,6 +61,9 @@ jobs:
         brew install libxaw
         brew install libtool
         brew install libx11
+        brew install coreutils
+        brew install flex
+        brew install libopenmpt
 
     - name: Ngspice
       run: make ngspice_compile ngspice_install
