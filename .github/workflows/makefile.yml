@@ -57,7 +57,6 @@ jobs:
         brew install libomp
         brew install automake
 
-
     - name: Ngspice
       run: make ngspice_compile ngspice_install
 
