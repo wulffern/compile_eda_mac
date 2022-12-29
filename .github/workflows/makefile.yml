@@ -25,6 +25,14 @@ jobs:
         path: |
           /usr/local/eda/tcl-tk
 
+    - name: Cache assets
+      id: cache-eda
+      uses: actions/cache@v3
+      with:
+        key: ${{ runner.os }}-eda
+        path: |
+          /usr/local/eda
+
     - name: TCL/TK
       if: steps.cache-tcltk.outputs.cache-hit != 'true'
       run: make tcl_compile tcl_install tk_compile tk_install
@@ -32,24 +40,22 @@ jobs:
     - name: homebrew
       run: make requirements
 
-    - name: Ngspice
-      run: |
-        export PATH="/usr/local/opt/bison/bin:$PATH"
-        make ngspice_compile ngspice_install
-
-    - name: Netgen
-      run: make netgen_compile netgen_install
-
-    - name: Magic
-      run: make magic_compile magic_install
-
-    - name: Xschem
-      run: make xschem_compile xschem_install
-
-    - name: Cache assets
-      id: cache-eda
+    - name: Cache netgen
+      id: cache-netgen
       uses: actions/cache@v3
       with:
-        key: ${{ runner.os }}-eda
+        key: ${{ runner.os }}-netgen
+        path: |
+          /usr/local/eda
+
+    - name: Netgen
+      if: steps.cache-netgen.outputs.cache-hit != 'true'
+      run: make netgen_compile netgen_install
+
+    - name: Cache magic
+      id: cache-magic
+      uses: actions/cache@v3
+      with:
+        key: ${{ runner.os }}-magic
         path: |
           /usr/local/eda
