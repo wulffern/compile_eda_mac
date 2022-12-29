@@ -50,7 +50,9 @@ jobs:
 
     - name: Netgen
       if: steps.cache-netgen.outputs.cache-hit != 'true'
-      run: make netgen_compile netgen_install
+      run: |
+        make netgen_compile
+        sudo make netgen_install
 
     - name: Cache magic
       id: cache-magic
