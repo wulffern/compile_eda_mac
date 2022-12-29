@@ -26,11 +26,10 @@ to create a full continuous integration/deployment flow to create a
 Clone the repo, and have a look at the `makefile.yaml` action and the Makefile
 to understand what you need to do.
 
-## Use the release on MacOS
+## Use the release on MacOS with Intel chip
 
 In theory, it should be possible to download
-[macos-12](assets/eda-macos-12.tar.gz) and use it, however, I've
-not been successful yet with that strategy.
+[macos-12](assets/eda-macos-12.tar.gz).
 
 ``` bash
 cd /
