@@ -34,7 +34,7 @@ not been successful yet with that strategy.
 
 ``` bash
 cd /
-sudo tar zxvf ~/Downloads/eda-macos.tar.gz
+sudo tar zxvf ~/Downloads/eda-macos-12.tar.gz
 ```
 
 

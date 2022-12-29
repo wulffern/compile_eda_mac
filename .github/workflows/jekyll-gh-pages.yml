@@ -34,10 +34,10 @@ jobs:
           sudo mkdir /usr/local/eda
           sudo chown $(whoami) /usr/local/eda
       - name: Cache assets
-        id: cache-eda
+        id: cache-ngspice
         uses: actions/cache@v3
         with:
-          key: macOS-eda
+          key: macOS-ngspice
           path: |
             /usr/local/eda
       - name: Make tar
