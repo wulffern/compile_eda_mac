@@ -17,6 +17,9 @@ jobs:
         sudo mkdir /usr/local/eda
         sudo chown $(whoami) /usr/local/eda
 
+    - name: homebrew
+      run: make requirements
+
     - name: Cache tcl/tk
       id: cache-tcltk
       uses: actions/cache@v3
@@ -27,10 +30,11 @@ jobs:
 
     - name: TCL/TK
       if: steps.cache-tcltk.outputs.cache-hit != 'true'
-      run: make tcl_compile tcl_install tk_compile tk_install
-
-    - name: homebrew
-      run: make requirements
+      run: |
+        make tcl_compile
+        sudo make tcl_install
+        make tk_compile
+        sudo make tk_install
 
     - name: Cache netgen
       id: cache-netgen

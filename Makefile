@@ -74,6 +74,7 @@ requirements:
 	brew install glib
 	brew install libxaw
 	brew install flex
+#libxft really creates issues it seems
 	brew uninstall libxft
 
 #--------------------------------------------------------------------
