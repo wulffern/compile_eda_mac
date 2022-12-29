@@ -25,14 +25,6 @@ jobs:
         path: |
           /usr/local/eda/tcl-tk
 
-    - name: Cache assets
-      id: cache-eda
-      uses: actions/cache@v3
-      with:
-        key: ${{ runner.os }}-eda
-        path: |
-          /usr/local/eda
-
     - name: TCL/TK
       if: steps.cache-tcltk.outputs.cache-hit != 'true'
       run: make tcl_compile tcl_install tk_compile tk_install
@@ -53,3 +45,11 @@ jobs:
 
     - name: Xschem
       run: make xschem_compile xschem_install
+
+    - name: Cache assets
+      id: cache-eda
+      uses: actions/cache@v3
+      with:
+        key: ${{ runner.os }}-eda
+        path: |
+          /usr/local/eda

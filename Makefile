@@ -28,18 +28,30 @@
 TK_PREFIX=/usr/local/eda/tcl-tk
 EDA_PREFIX=/usr/local/eda
 
-all: tt eda_compile eda_install
+all:
+	${MAKE} tcl_compile
+	sudo ${MAKE} tcl_install
+	${MAKE} tk_compile
+	sudo ${MAKE} tk_install
+	${MAKE} magic_compile
+	sudo ${MAKE} magic_install
+	${MAKE} netgen_compile
+	sudo ${MAKE} netgen_install
+	${MAKE} xschem_compile
+	sudo ${MAKE} xschem_install
+
+
 
 tt: tcl_compile tcl_install \
-	tk_compile tk_install 
+	tk_compile tk_install
+
 
 eda_compile: magic_compile \
 	xschem_compile \
 	netgen_compile \
 	ngspice_compile
 
-eda_install:
-	magic_install \
+eda_install: magic_install \
 	xschem_install \
 	netgen_install \
 	ngspice_install
@@ -62,7 +74,7 @@ requirements:
 	brew install glib
 	brew install libxaw
 	brew install flex
-	brew install libxft
+	brew uninstall libxft
 
 #--------------------------------------------------------------------
 # TCL/TK
@@ -80,7 +92,7 @@ ${tclver}:
 tcl_compile: ${tclver}
 	cd ${tclver}/unix && \
 	./configure --prefix=${TK_PREFIX} && \
-	make -j4
+	make
 
 tcl_install:
 	cd ${tclver}/unix; sudo make install
@@ -95,7 +107,7 @@ tk_compile: ${tkver}
 	./configure --prefix=${TK_PREFIX} \
 	--with-tcl=${TK_PREFIX}/lib \
 	--with-x --x-includes=/opt/X11/include --x-libraries=/opt/X11/lib   && \
-	make -j4
+	make
 
 tk_install:
 	cd ${tkver}/unix; sudo make install
@@ -114,10 +126,13 @@ magic_compile: magic
 	perl -pe "s/-g/-g -Wno-error=implicit-function-declaration/ig" -i magic/configure
 	cd magic && ./configure --prefix=${TK_PREFIX} --with-tcl=${TK_PREFIX}/lib \
 	--with-tk=${TK_PREFIX}/lib --x-includes=/opt/X11/include --x-libraries=/opt/X11/lib && \
-	make -j4
+	make
 
 magic_install:
 	cd magic && sudo make install
+	sudo install_name_tool -change ${TK_PREFIX}/lib:/opt/X11/lib/libtk${ttver}.dylib \
+	       ${TK_PREFIX}/lib/libtk${ttver}.dylib ${TK_PREFIX}/lib/magic/tcl/magicexec
+
 
 #--------------------------------------------------------------------
 # XSchem
@@ -131,7 +146,7 @@ xschem_compile: xschem
 	cd xschem && ./configure --prefix=${EDA_PREFIX}
 	perl -ibak -pe "s/CFLAGS/#CFLAGS/ig;s/LDFLAGS/#LDFLAGS/ig" xschem/Makefile.conf
 	echo "CFLAGS=-I/opt/X11/include -I/opt/X11/include/cairo -I${TK_PREFIX}/include -O2\n LDFLAGS= -L${TK_PREFIX}/lib -L/opt/X11/lib -lm -lcairo  -lX11 -lXrender -lxcb -lxcb-render -lX11-xcb -lXpm -ltcl8.6 -ltk8.6" >> xschem/Makefile.conf
-	cd xschem && make clean && make -j4
+	cd xschem && make
 
 xschem_install:
 	cd xschem && sudo make install
@@ -148,7 +163,7 @@ netgen_compile: netgen
 	perl -pe "s/-g/-g -Wno-error=implicit-function-declaration/ig" -i netgen/configure
 	cd netgen && ./configure --prefix ${EDA_PREFIX}/ --with-tcl=${TK_PREFIX}/lib \
 	--with-tk=${TK_PREFIX}/lib --x-includes=/opt/X11/include --x-libraries=/opt/X11/lib && \
-	make -j4
+	make
 
 netgen_install:
 	cd netgen && sudo make install && \
@@ -180,8 +195,8 @@ ngspice_compile: ngspice
 	--enable-cider \
 	CC="gcc-12" CXX="g++-12" \
 	--with-readline=/usr/local/opt/readline \
-	--disable-debug CFLAGS="-m64 -O2 -I/opt/X11/include/freetype2 -I/usr/local/include -I/usr/local/opt/readline/include " \
-	LDFLAGS="-m64 -L/usr/local/opt/bison/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/ncurses/lib -L/usr/local/lib -L/usr/local/opt/libomp/lib/ -fopenmp -lomp"
+	--disable-debug CFLAGS=" -O2 -I/opt/X11/include/freetype2 -I/usr/local/include -I/usr/local/opt/readline/include " \
+	LDFLAGS=" -L/usr/local/opt/bison/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/ncurses/lib -L/usr/local/lib -L/usr/local/opt/libomp/lib/ -fopenmp -lomp"
 	cd ngspice  && make -j4
 
 ngspice_install:
