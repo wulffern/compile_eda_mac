@@ -1,9 +1,9 @@
 name: macos-build
 
 on:
-#  push:
-#    branches: [ "main" ]
-#  pull_request:
+  push:
+    branches: [ "main" ]
+    #  pull_request:
 #    branches: [ "main" ]
   workflow_dispatch:
 
@@ -53,11 +53,3 @@ jobs:
       run: |
         make netgen_compile
         sudo make netgen_install
-
-    - name: Cache magic
-      id: cache-magic
-      uses: actions/cache@v3
-      with:
-        key: ${{ runner.os }}-magic
-        path: |
-          /usr/local/eda
