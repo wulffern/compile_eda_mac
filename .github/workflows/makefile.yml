@@ -53,3 +53,15 @@ jobs:
       run: |
         make netgen_compile
         sudo make netgen_install
+
+    - name: Cache magic
+      id: cache-magic
+      uses: actions/cache@v3
+      with:
+        key: ${{ runner.os }}-magic
+        path: |
+          /usr/local/eda
+
+    - name: Magic
+      if: steps.cache-magic.outputs.cache-hit != 'true'
+      run: make magic_compile magic_install
