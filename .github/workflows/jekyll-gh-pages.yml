@@ -41,7 +41,7 @@ jobs:
           path: |
             /usr/local/eda
       - name: Make tar
-        run: tar cfz docs/assets/eda-macos.tar.gz /usr/local/eda
+        run: tar cfz docs/assets/eda-macos-12.tar.gz /usr/local/eda
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
