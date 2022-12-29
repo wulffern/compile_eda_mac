@@ -25,14 +25,6 @@ jobs:
         path: |
           /usr/local/eda/tcl-tk
 
-    - name: Cache assets
-      id: cache-eda
-      uses: actions/cache@v3
-      with:
-        key: ${{ runner.os }}-eda
-        path: |
-          /usr/local/eda
-
     - name: TCL/TK
       if: steps.cache-tcltk.outputs.cache-hit != 'true'
       run: make tcl_compile tcl_install tk_compile tk_install
@@ -64,4 +56,35 @@ jobs:
 
     - name: Magic
       if: steps.cache-magic.outputs.cache-hit != 'true'
-      run: make magic_compile magic_install
+      run: |
+        make magic_compile
+        sudo make magic_install
+
+    - name: Cache xschem
+      id: cache-xschem
+      uses: actions/cache@v3
+      with:
+        key: ${{ runner.os }}-xschem
+        path: |
+          /usr/local/eda
+
+    - name: Xschem
+      if: steps.cache-xschem.outputs.cache-hit != 'true'
+      run: |
+        make xschem_compile
+        sudo make xschem_install
+
+    - name: Cache ngspice
+      id: cache-ngspice
+      uses: actions/cache@v3
+      with:
+        key: ${{ runner.os }}-ngspice
+        path: |
+          /usr/local/eda
+
+    - name: Ngspice
+      if: steps.cache-ngspice.outputs.cache-hit != 'true'
+      run: |
+        export PATH="/usr/local/opt/bison/bin:$PATH"
+        make ngspice_compile
+        sudo make ngspice_install
