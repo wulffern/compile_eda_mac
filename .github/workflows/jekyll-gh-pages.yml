@@ -35,7 +35,7 @@ jobs:
           sudo chown $(whoami) /usr/local/eda
       - name: Cache assets
         id: cache-ngspice
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v3
         with:
           key: macOS-ngspice
           path: |
