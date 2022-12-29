@@ -62,6 +62,7 @@ requirements:
 	brew install glib
 	brew install libxaw
 	brew install flex
+	brew install libxft
 
 #--------------------------------------------------------------------
 # TCL/TK
