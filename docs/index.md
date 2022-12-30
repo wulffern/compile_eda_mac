@@ -22,7 +22,7 @@ to create a full continuous integration/deployment flow to create a
 [macos-12](assets/eda-macos-12.tar.gz) release.
 
 
-## Do things your self 
+## Do things yourself 
 Clone the repo, and have a look at the `makefile.yaml` action and the Makefile
 to understand what you need to do.
 
